@@ -4,8 +4,9 @@ const int screenWidth = 3000;
 const int screenHeight = 2000;
 
 const Color BGCOLOR = {46,46,46,100};
+//const Color BGCOLOR = {0,0,0,0};
 float SCALE = 2.0;
-//const Color GRIDCOLOR = {255,255,255,100};
+const Color GRIDCOLOR = {255,255,255,150};
 
 void renderAxes(){
     ClearBackground(BGCOLOR);
@@ -17,15 +18,10 @@ void renderAxes(){
     DrawLine(YAXIS[0][0], YAXIS[0][1], YAXIS[1][0], YAXIS[1][1], WHITE);
 }
 
-void renderGrid(RenderTexture2D *target){
-    DrawTextureRec(target->texture, (Rectangle){0, 0, (float)target->texture.width, (float)target->texture.height}, (Vector2){0,0}, BGCOLOR);
-}
-
 void computeFunction(){
 }
 
 void renderFunction(RenderTexture2D *target){
-
 }
 
 void gridTexture(RenderTexture2D *target){
@@ -35,11 +31,11 @@ void gridTexture(RenderTexture2D *target){
     int inc = 10;
 
     for(int i=0; i<screenWidth; i+=inc*SCALE){
-        DrawLine(i, 0, i, screenHeight, WHITE);
+        DrawRectangle(i, 0, 1, screenHeight, GRIDCOLOR);
     }
 
     for(int i=0; i<screenHeight; i+=inc*SCALE){
-        DrawLine(0, i, screenWidth, i, WHITE);
+        DrawRectangle(0, i, screenWidth, 1, GRIDCOLOR);
     }
 
     EndTextureMode();
@@ -61,7 +57,6 @@ int main(void){
             break;
         }
         if(IsKeyPressed(KEY_EQUAL)){
-            //TODO: implement the render texture function to call it when changing scale
             SCALE+=0.5;
             gridTexture(&target);
         }
@@ -74,7 +69,7 @@ int main(void){
 
         BeginDrawing();
         renderAxes();
-        renderGrid(&target);
+        DrawTextureRec(target.texture, (Rectangle){0, 0, (float)target.texture.width, (float)target.texture.height}, (Vector2){0,0}, GRIDCOLOR);
         EndDrawing();
     }
 

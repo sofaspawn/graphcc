@@ -3,5 +3,6 @@
 ## TODO:
 - [x] show axes
 - [x] show grid
+- [x] scale grid with user input
 - [ ] align grid to axes
 - [ ] draw functions
