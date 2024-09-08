@@ -6,9 +6,10 @@ const int screenHeight = 2000;
 const int INC = 10;
 
 const Color BGCOLOR = {46,46,46,100};
-//const Color BGCOLOR = {0,0,0,0};
-float SCALE = 1.0;
 const Color GRIDCOLOR = {255,255,255,150};
+//const Color BGCOLOR = {0,0,0,0};
+
+float SCALE = 4.0;
 
 void renderAxes(){
     ClearBackground(BGCOLOR);
@@ -20,7 +21,12 @@ void renderAxes(){
     DrawLine(YAXIS[0][0], YAXIS[0][1], YAXIS[1][0], YAXIS[1][1], WHITE);
 }
 
-void renderFunction(RenderTexture2D *target){
+void renderFunction(RenderTexture2D *func){
+    Vector2 points[][2] = {{1,2}, {22,200}, {400, 500}, {1000, 2000}};
+    BeginTextureMode(*func);
+    //DrawLineStrip(*points, sizeof(points)/sizeof(points[0]), GREEN);
+    DrawLine(screenWidth/2, screenHeight/2, 1000, screenHeight, GREEN);
+    EndTextureMode();
 }
 
 void gridTexture(RenderTexture2D *target){
@@ -48,13 +54,15 @@ void gridTexture(RenderTexture2D *target){
 
 int main(void){
 
-    InitWindow(screenWidth, screenHeight, "draw graphs and shit");
+    InitWindow(screenWidth, screenHeight, "GraphCC");
 
-    SetTargetFPS(90);
+    SetTargetFPS(60);
 
     RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
+    RenderTexture2D func = LoadRenderTexture(screenWidth, screenHeight);
 
     gridTexture(&target);
+    renderFunction(&func);
 
     while(!WindowShouldClose()){
 
@@ -64,17 +72,21 @@ int main(void){
         if(IsKeyPressed(KEY_EQUAL)){
             SCALE+=0.5;
             gridTexture(&target);
+            renderFunction(&target);
         }
         if(IsKeyPressed(KEY_MINUS)){
-            if(SCALE>0){
-                SCALE-=0.5;
-                gridTexture(&target);
+            if(SCALE<1.0){
+                continue;
             }
+            SCALE-=0.5;
+            gridTexture(&target);
+            renderFunction(&target);
         }
 
         BeginDrawing();
         renderAxes();
         DrawTextureRec(target.texture, (Rectangle){0, 0, (float)target.texture.width, (float)target.texture.height}, (Vector2){0,0}, GRIDCOLOR);
+        DrawTextureRec(func.texture, (Rectangle){0, 0, (float)func.texture.width, (float)func.texture.height}, (Vector2){0,0}, GREEN);
         EndDrawing();
     }
 
