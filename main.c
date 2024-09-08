@@ -3,9 +3,11 @@
 const int screenWidth = 3000;
 const int screenHeight = 2000;
 
+const int INC = 10;
+
 const Color BGCOLOR = {46,46,46,100};
 //const Color BGCOLOR = {0,0,0,0};
-float SCALE = 2.0;
+float SCALE = 1.0;
 const Color GRIDCOLOR = {255,255,255,150};
 
 void renderAxes(){
@@ -18,9 +20,6 @@ void renderAxes(){
     DrawLine(YAXIS[0][0], YAXIS[0][1], YAXIS[1][0], YAXIS[1][1], WHITE);
 }
 
-void computeFunction(){
-}
-
 void renderFunction(RenderTexture2D *target){
 }
 
@@ -28,14 +27,20 @@ void gridTexture(RenderTexture2D *target){
     BeginTextureMode(*target);
     ClearBackground(BGCOLOR);
 
-    int inc = 10;
-
-    for(int i=0; i<screenWidth; i+=inc*SCALE){
+    for(int i=screenWidth/2; i<screenWidth; i+=INC*SCALE){
         DrawRectangle(i, 0, 1, screenHeight, GRIDCOLOR);
     }
 
-    for(int i=0; i<screenHeight; i+=inc*SCALE){
+    for(int i=screenWidth/2; i>0; i-=INC*SCALE){
+        DrawRectangle(i-1, 0, 1, screenHeight, GRIDCOLOR);
+    }
+
+    for(int i=screenHeight/2; i<screenHeight; i+=INC*SCALE){
         DrawRectangle(0, i, screenWidth, 1, GRIDCOLOR);
+    }
+
+    for(int i=screenHeight/2; i>0; i-=INC*SCALE){
+        DrawRectangle(0, i-1, screenWidth, 1, GRIDCOLOR);
     }
 
     EndTextureMode();
