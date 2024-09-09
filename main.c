@@ -1,4 +1,6 @@
 #include <raylib.h>
+#include <time.h>
+#include <stdlib.h>
 
 const int screenWidth = 3000;
 const int screenHeight = 2000;
@@ -69,24 +71,34 @@ int main(void){
     RenderTexture2D func = LoadRenderTexture(screenWidth, screenHeight);
     Texture2D img = LoadTexture("./mario.png");
     float aspect_ratio = (float)img.height/(float)img.width;
-    img.width = 200;
+    img.width = 100;
     img.height = aspect_ratio*img.width;
 
-    int x = screenWidth/2-img.width/2;
-    int y = screenHeight/2-img.height/2;
+    srand(time(NULL));
+    int x = rand() % screenWidth;
+    int y = rand() % screenHeight;
+    //int y = screenHeight/2-img.height/2;
 
     gridTexture(&target);
     renderFunction(&func);
 
     InitAudioDevice();
-    Sound sfx = LoadSound("./mario.wav");
-    PlaySound(sfx);
+    Sound spawn_sfx = LoadSound("./mario_sfx/mario_spawn.wav");
+    Sound bgmusic = LoadSound("./mario_sfx/bgmusic.wav");
+    PlaySound(spawn_sfx);
+    PlaySound(bgmusic);
 
+    int i = 0;
 
     while(!WindowShouldClose()){
 
+        if(i%180==0){
+            PlaySound(bgmusic);
+        }
+
         keepMarioInBounds(&x, &y);
 
+        /*
         if(IsKeyDown(KEY_S)){
             y+=SCALE*INC;
         }
@@ -99,6 +111,7 @@ int main(void){
         if(IsKeyDown(KEY_A)){
             x-=SCALE*INC;
         }
+        */
         if(IsKeyPressed(KEY_Q)){
             break;
         }
@@ -120,8 +133,10 @@ int main(void){
         renderAxes();
         DrawTextureRec(target.texture, (Rectangle){0, 0, (float)target.texture.width, (float)target.texture.height}, (Vector2){0,0}, GRIDCOLOR);
         DrawTextureRec(func.texture, (Rectangle){0, 0, (float)func.texture.width, (float)func.texture.height}, (Vector2){0,0}, GREEN);
-        DrawTexture(img, x, y,WHITE);
+        DrawTexture(img, x, y, WHITE);
         EndDrawing();
+
+        i+=1;
     }
 
     UnloadTexture(img);
