@@ -52,6 +52,13 @@ void gridTexture(RenderTexture2D *target){
     EndTextureMode();
 }
 
+void keepMarioInBounds(int *x, int *y){
+    if(*x<0){*x = screenWidth+*x;}
+    if(*x>=screenWidth){*x = screenWidth-*x;}
+    if(*y<0){*y = screenHeight+*y;}
+    if(*y>=screenHeight){*y = screenHeight-*y;}
+}
+
 int main(void){
 
     InitWindow(screenWidth, screenHeight, "GraphCC");
@@ -78,17 +85,19 @@ int main(void){
 
     while(!WindowShouldClose()){
 
+        keepMarioInBounds(&x, &y);
+
         if(IsKeyDown(KEY_S)){
-            y+=50;
+            y+=SCALE*INC;
         }
         if(IsKeyDown(KEY_W)){
-            y-=50;
+            y-=SCALE*INC;
         }
         if(IsKeyDown(KEY_D)){
-            x+=50;
+            x+=SCALE*INC;
         }
         if(IsKeyDown(KEY_A)){
-            x-=50;
+            x-=SCALE*INC;
         }
         if(IsKeyPressed(KEY_Q)){
             break;
