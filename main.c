@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define FPS 60
 
@@ -26,14 +27,17 @@ void renderAxes(){
     DrawLine(YAXIS[0][0], YAXIS[0][1], YAXIS[1][0], YAXIS[1][1], WHITE);
 }
 
+//FIXME: fix the function to render graphs
 void renderFunction(RenderTexture2D *func){
-    int points[screenWidth][2];
+    Vector2 points[screenWidth];
     for(int i=0; i<screenWidth; i++){
-        int point[2] = {i, i*i};
-        //points[i] = point;
+        int x = (i + (float)screenWidth)*SCALE;
+        int y = 200*sin(x)+(double)screenHeight/2;
+        Vector2 point = {x, y};
+        points[i] = point;
     }
     BeginTextureMode(*func);
-    //DrawLineStrip(points, sizeof(points)/sizeof(points[0]), GREEN);
+    DrawLineStrip(points, sizeof(points)/sizeof(points[0]), RED);
     //DrawLine(screenWidth/2, screenHeight/2, 1000, screenHeight, GREEN);
     EndTextureMode();
 }
@@ -124,15 +128,15 @@ int main(void){
         move(&x, &y, direction, &velocity);
         keepMarioInBounds(img, x, y, &direction[0], &direction[1], velocity, boundTouch);
 
-        if(IsKeyPressed(KEY_Q)){
+        if(IsKeyDown(KEY_Q)){
             break;
         }
-        if(IsKeyPressed(KEY_EQUAL)){
+        if(IsKeyDown(KEY_EQUAL)){
             SCALE+=0.5;
             gridTexture(&target);
             renderFunction(&target);
         }
-        if(IsKeyPressed(KEY_MINUS)){
+        if(IsKeyDown(KEY_MINUS)){
             if(SCALE<1.0){
                 continue;
             }
