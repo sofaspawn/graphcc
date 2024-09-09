@@ -60,12 +60,36 @@ int main(void){
 
     RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     RenderTexture2D func = LoadRenderTexture(screenWidth, screenHeight);
+    Texture2D img = LoadTexture("./mario.png");
+    float aspect_ratio = (float)img.height/(float)img.width;
+    img.width = 200;
+    img.height = aspect_ratio*img.width;
+
+    int x = screenWidth/2-img.width/2;
+    int y = screenHeight/2-img.height/2;
 
     gridTexture(&target);
     renderFunction(&func);
 
+    InitAudioDevice();
+    Sound sfx = LoadSound("./mario.wav");
+    PlaySound(sfx);
+
+
     while(!WindowShouldClose()){
 
+        if(IsKeyDown(KEY_S)){
+            y+=50;
+        }
+        if(IsKeyDown(KEY_W)){
+            y-=50;
+        }
+        if(IsKeyDown(KEY_D)){
+            x+=50;
+        }
+        if(IsKeyDown(KEY_A)){
+            x-=50;
+        }
         if(IsKeyPressed(KEY_Q)){
             break;
         }
@@ -87,10 +111,13 @@ int main(void){
         renderAxes();
         DrawTextureRec(target.texture, (Rectangle){0, 0, (float)target.texture.width, (float)target.texture.height}, (Vector2){0,0}, GRIDCOLOR);
         DrawTextureRec(func.texture, (Rectangle){0, 0, (float)func.texture.width, (float)func.texture.height}, (Vector2){0,0}, GREEN);
+        DrawTexture(img, x, y,WHITE);
         EndDrawing();
     }
 
+    UnloadTexture(img);
     UnloadRenderTexture(target);
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;
