@@ -1,5 +1,5 @@
-# Graphcc
-- trying to make a desmos like thing but with more configurability, in C
+# GraphCC
+- goofy desmos with mario cameo, in C
 ![](./mario_show.png)
 
 ## TODO:
